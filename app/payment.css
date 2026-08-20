@@ -1,0 +1,11 @@
+.payment-error {
+  background: #fff1ed;
+  color: #a1402d;
+  padding: 11px 13px;
+  font-size: 12px;
+}
+
+.checkout-button:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
