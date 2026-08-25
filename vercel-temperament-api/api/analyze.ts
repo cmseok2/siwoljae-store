@@ -13,6 +13,22 @@ type Input = {
 
 const attempts = new Map<string, { count: number; reset: number }>();
 const allowedOrigin = process.env.ALLOWED_ORIGIN || "https://commerce-store.cmsuk93.chatgpt.site";
+const fixedChapter5 = `⑤ 앞으로의 흐름이 궁금하시다면
+여기까지는 이 아이가 타고난 기질, 즉 지금의 아이를 본 것입니다. 아이 사주에서 정말 중요한 건 이 기질이 앞으로 어느 시기에 어떻게 움직이는가인데, 그 흐름은 정식 상담에서 다루는 영역입니다.
+
+정식 상담에서는 다음 세 가지를 종합 리포트로 정리해 드립니다.
+
+첫째, 연령대별 발달 흐름입니다. 유치원, 초등, 사춘기까지 시기별로 이 아이의 기질이 어떻게 움직이는지, 어느 시기에 흔들리고 어느 시기에 빛나는지를 대운과 세운 흐름으로 짚어드립니다.
+
+둘째, 학습 스타일과 양육 가이드입니다. 이 아이가 가장 잘 흡수하는 공부 방식과 집중력을 살리는 환경, 잘 맞는 양육 방식과 역효과가 나는 방식까지 실전 중심으로 정리해 드립니다.
+
+셋째, 부모님과 아이의 궁합입니다. 부모님 사주와 아이 기질이 어디서 잘 통하고 어디서 엇갈리는지, 이 아이에게 통하는 대화 방식은 무엇인지 두 사주를 함께 놓고 풀어드립니다.
+
+이 내용을 PDF 종합 리포트 12페이지 분량으로 제공해 드립니다.
+
+첫 상담이시면 만원 할인 쿠폰을 적용해 드립니다.
+
+위 장면들 중 짚이는 게 있으셨다면, 그 지점이 바로 이 아이 기질의 입구입니다. 궁금한 점은 편하게 문의 주세요.`;
 
 function setCors(response: VercelResponse, origin?: string) {
   response.setHeader("Access-Control-Allow-Origin", origin === allowedOrigin ? origin : allowedOrigin);
@@ -85,7 +101,7 @@ export default async function handler(request: VercelRequest, response: VercelRe
     const pillars = pillarsFor(input);
     const age = Math.max(0, Math.floor((Date.now() - born.getTime()) / 31_557_600_000));
     const ageGroup = age <= 3 ? "영유아" : age <= 6 ? "유아" : age <= 9 ? "초등 저학년" : age <= 12 ? "초등 고학년" : "중고등";
-    const prompt = `사주서가 자녀 기질 분석을 생성합니다. 입력은 ${input.calendarType === "lunar" ? "음력" : "양력"} ${input.birthDate}, ${input.unknownTime ? "출생 시간 모름" : input.birthTime}, ${input.gender}, 만 ${age}세 ${ageGroup}, 연주 ${pillars.year}, 월주 ${pillars.month}, 일주 ${pillars.day}${pillars.time ? `, 시주 ${pillars.time}` : ""}입니다. 이름은 받지 않았으므로 헤더에는 우리 아이를 씁니다. 무료는 현재 기질, 현재 관찰 행동, 오늘 팁 하나만 다룹니다. 미래 시기, 전체 학습 및 양육 전략, 부모 궁합은 분석하지 말고 ⑤에서 유료 범위로만 소개합니다. 각 챕터는 제목 포함 1000자 이하, 제목 다음 한 줄 본문, 빈 줄 없이 씁니다. 쌍따옴표, 가운뎃점, 한자, 본문 불릿을 쓰지 않고 습니다체와 비단정 표현을 씁니다. 아이는 이 아이로 부릅니다. ① 타고난 기질은 일주 구조의 사주 용어를 한 번만 쓰고 평이하게 번역하며 핵심 축 두 개와 겉과 속 대비로 마칩니다. ② 부모님 눈에 이미 보이고 있을 장면은 ${ageGroup}에게 관찰되는 구체적 장면 두 개를 훈육, 또래 관계, 새 환경 중 서로 다른 영역에서 제시하고 마지막에 한 번만 확인 질문을 씁니다. ③ 이 아이의 에너지가 꺾이는 순간은 상황 하나만 죄책감 없이 설명합니다. ④ 오늘부터 바로 쓸 수 있는 팁 하나는 오늘 가능한 팁 정확히 하나와 이유를 씁니다. ⑤ 앞으로의 흐름이 궁금하시다면 현재 기질까지만 봤음을 알리고 유료 범위인 연령대별 흐름, 학습과 양육 가이드, 부모와 아이의 궁합과 대화법을 소개합니다. 상품은 12페이지 자녀 기질 분석 및 양육 가이드, 45,000원입니다. 할인이나 상담 시간은 쓰지 않습니다. 의료 또는 심리 진단처럼 표현하지 않습니다.`;
+    const prompt = `사주서가 자녀 기질 분석의 헤더와 ①부터 ④까지만 생성합니다. 입력은 ${input.calendarType === "lunar" ? "음력" : "양력"} ${input.birthDate}, ${input.unknownTime ? "출생 시간 모름" : input.birthTime}, ${input.gender}, 만 ${age}세 ${ageGroup}, 연주 ${pillars.year}, 월주 ${pillars.month}, 일주 ${pillars.day}${pillars.time ? `, 시주 ${pillars.time}` : ""}입니다. 이름은 받지 않았으므로 헤더에는 우리 아이를 씁니다. 무료는 현재 기질, 현재 관찰 행동, 오늘 팁 하나만 다룹니다. 미래 시기, 전체 학습 및 양육 전략, 부모 궁합은 분석하지 않습니다. 각 챕터는 제목 포함 1000자 이하, 제목 다음 한 줄 본문, 빈 줄 없이 씁니다. 쌍따옴표, 가운뎃점, 한자, 본문 불릿을 쓰지 않고 습니다체와 비단정 표현을 씁니다. 아이는 이 아이로 부릅니다. ① 타고난 기질은 일주 구조의 사주 용어를 한 번만 쓰고 평이하게 번역하며 핵심 축 두 개와 겉과 속 대비로 마칩니다. ② 부모님 눈에 이미 보이고 있을 장면은 ${ageGroup}에게 관찰되는 구체적 장면 두 개를 훈육, 또래 관계, 새 환경 중 서로 다른 영역에서 제시하고 마지막에 한 번만 확인 질문을 씁니다. ③ 이 아이의 에너지가 꺾이는 순간은 상황 하나만 죄책감 없이 설명합니다. ④ 오늘부터 바로 쓸 수 있는 팁 하나는 오늘 가능한 팁 정확히 하나와 이유를 씁니다. 의료 또는 심리 진단처럼 표현하지 않습니다.`;
 
     const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
     const aiResponse = await client.responses.create({
@@ -104,9 +120,9 @@ export default async function handler(request: VercelRequest, response: VercelRe
             type: "object",
             properties: {
               header: { type: "string" }, chapter1: { type: "string" }, chapter2: { type: "string" },
-              chapter3: { type: "string" }, chapter4: { type: "string" }, chapter5: { type: "string" },
+              chapter3: { type: "string" }, chapter4: { type: "string" },
             },
-            required: ["header", "chapter1", "chapter2", "chapter3", "chapter4", "chapter5"],
+            required: ["header", "chapter1", "chapter2", "chapter3", "chapter4"],
             additionalProperties: false,
           },
         },
@@ -114,10 +130,10 @@ export default async function handler(request: VercelRequest, response: VercelRe
     });
     if (!aiResponse.output_text) throw new Error("empty output");
     const analysis = JSON.parse(aiResponse.output_text);
-    for (const key of ["chapter1", "chapter2", "chapter3", "chapter4", "chapter5"]) {
+    for (const key of ["chapter1", "chapter2", "chapter3", "chapter4"]) {
       if (typeof analysis[key] !== "string" || analysis[key].length > 1000) throw new Error("invalid format");
     }
-    return response.status(200).json({ ...analysis, pillars });
+    return response.status(200).json({ ...analysis, chapter5: fixedChapter5, pillars });
   } catch (error) {
     console.error("temperament analysis failed", error);
     const diagnostic = error instanceof OpenAI.APIError
