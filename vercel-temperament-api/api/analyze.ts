@@ -120,6 +120,9 @@ export default async function handler(request: VercelRequest, response: VercelRe
     return response.status(200).json({ ...analysis, pillars });
   } catch (error) {
     console.error("temperament analysis failed", error);
-    return response.status(500).json({ message: "분석 중 잠시 문제가 생겼어요. 잠시 후 다시 시도해 주세요." });
+    const diagnostic = error instanceof OpenAI.APIError
+      ? { errorCode: error.code || "openai_error", errorStatus: error.status }
+      : { errorCode: "server_error" };
+    return response.status(500).json({ message: "분석 중 잠시 문제가 생겼어요. 잠시 후 다시 시도해 주세요.", ...diagnostic });
   }
 }
