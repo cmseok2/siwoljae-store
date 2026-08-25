@@ -1,0 +1,13 @@
+{
+  "name": "sajuseoga-temperament-api",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "lunar-javascript": "^1.7.7",
+    "openai": "^7.5.0"
+  }
+}
